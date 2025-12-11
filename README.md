@@ -1,87 +1,229 @@
-### Bộ code base để bắt đầu học khóa Full Stack MERN Pro (VIẾT CÁC REST API CHUẨN CHỈNH) - Lập Trình qua dự án thực tế Trello Clone trên kênh YouTube TrungQuanDev của mình nhé các bạn!
-### Base project for my Full Stack MERN Pro Course - Build Trello App on YouTube!
+# Trello API
 
-- Playlist khóa Pro: https://www.youtube.com/playlist?list=PLP6tw4Zpj-RJP2-YrhtkWqObMQ-AA4TDy
+A RESTful API backend for a Trello-clone application built with Node.js, Express, and MongoDB.
 
-- Playlist khóa Advanced: https://youtube.com/playlist?list=PLP6tw4Zpj-RJbPQfTZ0eCAXH_mHQiuf2G&si=zmt9y6TYo-e3sIwv
+## Author
 
-### Hướng dẫn clone Repo code này về máy các bạn chuẩn nhất ở video này:
+**ngsouthbrother04** - [GitHub](https://github.com/ngsouthbrother04)
 
-- Cấu trúc dự án nâng cao, chuẩn thực tế, có Babel, ESLint...vv | NodeJS + MongoDB. Link: https://youtu.be/8hhXamKIdsY
+## 📋 Overview
 
----
+This project implements a task management system similar to Trello, featuring boards, columns (lists), and cards. The API follows a clean three-layer architecture pattern ensuring maintainability and scalability.
 
-### 🎁 DOWNLOAD FULL SOURCE CODE của toàn bộ dự án (Pro & Advanced) cũng như Donate ủng hộ mình ly cafe nếu bạn muốn 🤝
+## 🏗️ Architecture
 
-👉 Đầu tiên cần phải làm rõ một điều: Mình KHÔNG BÁN CODE cũng như KHÔNG BÁN KHÓA HỌC gì ở đây hết. Bởi vì mình đã cung cấp đầy đủ mọi tài nguyên cần thiết cho trường hợp bạn muốn học FREE Miễn Phí từ đầu rồi.
-
-👉 ĐIỀU QUAN TRỌNG TIẾP THEO: Bạn cần phải hiểu rõ về lý do tại sao mình lại chia ra 3 gói Donate cũng như sự khác nhau giữa 3 gói này là gì. Mọi thông tin mình đều đã công khai ở bài viết trên blog chính chủ từ mình nhé, bởi vì nội dung khá dài. Bạn nên dành thời gian đọc nó trước khi bắt đầu khóa học cực kỳ chất lượng này.
-
-👉 Link bài viết: 👇
-
-🌐 https://trungquandev.com/khoa-hoc-lap-trinh-full-stack-mern-100-du-an-thuc-te-chat-luong/
-
-**🥉 FREE PACK (No Sponsor)**
-
-• 🌟 Download on Ko-fi: https://ko-fi.com/s/8e56e2c5d0
-
-• 🌟 Download on Buy Me a Coffee: https://buymeacoffee.com/codetq/e/318762
-
-**🥈 GOLD PACK (Gold Sponsor)**
-
-• 🌟 Download on Ko-fi: https://ko-fi.com/s/e41c325ca4
-
-• 🌟 Download on Buy Me a Coffee: https://buymeacoffee.com/codetq/e/191152
-
-**🥇 DIAMOND PACK (Diamond Sponsor - VIP)**
-
-• 🌟 Download on Ko-fi: https://ko-fi.com/s/27670843df
-
-• 🌟 Download on Buy Me a Coffee: https://buymeacoffee.com/codetq/e/318750
-
-**🏆 HOẶC NẾU BẠN KHÔNG CÓ THẺ VISA THANH TOÁN QUỐC TẾ THÌ CÓ THỂ LIÊN HỆ TRỰC TIẾP VỚI MÌNH TẠI ĐÂY ĐỂ LẤY TÀI NGUYÊN HỌC TẬP NHÉ 👇**
-
-**🌐 Facebook TrungQuanDev: 👉 https://facebook.com/trungquandev**
-
-**👑 Lưu ý: Video hướng dẫn chi tiết cách Install Source Code (Pro & Advanced) đều đã có trong 2 Playlists của khóa học rồi nhé.**
-
----
-
-### Requirements - Thông tin của bộ Code Base này - Chuẩn các phiên bản dưới đây để bắt đầu học: (Semantic Versioning)
+### Three-Layer MVC Pattern
 
 ```
-* nodejs >= 18.16.0
-* npm = v9.8.1
-* yarn = v1.22.19
-
-* "express": "^4.18.2"
-* "nodemon": "^3.0.1"
-* "eslint": "^8.47.0"
-
-* "@babel/runtime": "^7.22.10"
-* "@babel/cli": "^7.22.10"
-* "@babel/core": "^7.22.10"
-* "@babel/eslint-parser": "^7.22.10"
-* "@babel/node": "^7.22.10"
-* "@babel/plugin-transform-runtime": "^7.22.10"
-* "@babel/preset-env": "^7.22.10"
-* "babel-plugin-module-resolver": "^5.0.0"
+Request → Route → Validation → Controller → Service → Model → Database
 ```
 
-### About Me - Thông tin về mình:
+```mermaid
+flowchart TB
+    subgraph Client
+        A[HTTP Request]
+    end
 
-Author: **Trungquandev - Một Lập Trình Viên** && **CodeTQ - ASMR Programming**
+    subgraph Express Server
+        B[Routes]
+        C[Validation Middleware]
+        D[Controller]
+        E[Error Handling Middleware]
+    end
 
-Blog: https://trungquandev.com/
+    subgraph Business Layer
+        F[Service]
+    end
 
-CV: https://cv.trungquandev.com/
+    subgraph Data Layer
+        G[Model]
+        H[(MongoDB)]
+    end
 
-YouTube 01 (Trungquandev - Một Lập Trình Viên): https://www.youtube.com/@trungquandev
+    A -->|"POST /v1/boards"| B
+    B -->|"Validate req.body"| C
+    C -->|"Pass"| D
+    C -->|"Fail"| E
+    D -->|"Call service method"| F
+    F -->|"Business logic"| G
+    G -->|"Query"| H
+    H -->|"Result"| G
+    G -->|"Data"| F
+    F -->|"Response data"| D
+    D -->|"JSON Response"| A
+    E -->|"Error Response"| A
+```
 
-YouTube 02 (CodeTQ - ASMR Programming): https://www.youtube.com/@code-tq
+### Request Flow Example
 
-"Learning new everyday not the copycat of yesterday!"
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant R as Route
+    participant V as Validation
+    participant CT as Controller
+    participant S as Service
+    participant M as Model
+    participant DB as MongoDB
 
-"A bit of fragrance clings to the hand that gives flowers!"
+    C->>R: PUT /v1/boards/supports/moving-card
+    R->>V: boardValidation.movingCardBetweenColumns
+    V->>V: Joi schema validation
+    
+    alt Validation Failed
+        V-->>C: 422 Unprocessable Entity
+    else Validation Passed
+        V->>CT: next()
+        CT->>S: boardService.movingCardBetweenColumns(req.body)
+        S->>M: columnModel.updateColumn()
+        M->>DB: findOneAndUpdate()
+        DB-->>M: Updated document
+        M-->>S: Result
+        S->>M: cardModel.updateCard()
+        M->>DB: findOneAndUpdate()
+        DB-->>M: Updated document
+        M-->>S: Result
+        S-->>CT: { updateResult: 'success' }
+        CT-->>C: 200 OK
+    end
+```
 
-Thanks for watching!
+### Data Model Relationships
+
+```mermaid
+erDiagram
+    BOARD ||--o{ COLUMN : contains
+    COLUMN ||--o{ CARD : contains
+    BOARD {
+        ObjectId _id PK
+        string title
+        string slug
+        string description
+        string type
+        array columnOrderIds
+        boolean _destroy
+        timestamp createdAt
+        timestamp updatedAt
+    }
+    COLUMN {
+        ObjectId _id PK
+        ObjectId boardId FK
+        string title
+        array cardOrderIds
+        boolean _destroy
+        timestamp createdAt
+        timestamp updatedAt
+    }
+    CARD {
+        ObjectId _id PK
+        ObjectId boardId FK
+        ObjectId columnId FK
+        string title
+        string description
+        boolean _destroy
+        timestamp createdAt
+        timestamp updatedAt
+    }
+```
+
+## 📁 Project Structure
+
+```
+src/
+├── config/          # Environment, database, CORS configuration
+├── controllers/     # HTTP request handlers
+├── middlewares/     # Error handling, authentication (future)
+├── models/          # MongoDB schemas & database operations
+├── routes/
+│   └── v1/          # API version 1 endpoints
+├── services/        # Business logic layer
+├── utils/           # Helpers, constants, validators
+└── server.js        # Application entry point
+```
+
+## 🔌 API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/v1/boards` | Get all boards |
+| `POST` | `/v1/boards` | Create a new board |
+| `GET` | `/v1/boards/:id` | Get board details with columns & cards |
+| `PUT` | `/v1/boards/:id` | Update board |
+| `PUT` | `/v1/boards/supports/moving-card` | Move card between columns |
+| `POST` | `/v1/columns` | Create a new column |
+| `PUT` | `/v1/columns/:id` | Update column |
+| `DELETE` | `/v1/columns/:id` | Delete column and its cards |
+| `POST` | `/v1/cards` | Create a new card |
+| `PUT` | `/v1/cards/:id` | Update card |
+
+## 🛠️ Tech Stack
+
+- **Runtime:** Node.js >= 18.x
+- **Framework:** Express.js 4.x
+- **Database:** MongoDB 6.x (Native Driver)
+- **Validation:** Joi
+- **Transpiler:** Babel (ES6+ support with path aliasing)
+- **Linting:** ESLint
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js >= 18.16.0
+- Yarn >= 1.22.19
+- MongoDB (local or Atlas)
+
+### Installation
+
+#### Cloning from repository
+
+```bash
+git clone https://github.com/ngsouthbrother04/trello-api.git
+```
+
+```bash
+cd trello-api
+```
+
+#### Installing dependencies
+
+```bash
+yarn install
+```
+
+### Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+MONGODB_URI=
+DATABASE_NAME=
+APP_HOST=localhost
+APP_PORT=8017
+BUILD_MODE=dev
+```
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017` |
+| `DATABASE_NAME` | Database name | `trello-db` |
+| `APP_HOST` | Server host | `localhost` |
+| `APP_PORT` | Server port | `8017` |
+| `BUILD_MODE` | Environment mode | `dev` / `production` |
+
+### Running the Application
+
+```bash
+# Development
+yarn dev
+
+# Production build
+yarn build
+yarn production
+```
+
+## 📄 License
+
+This project is for educational purposes.
+
+---
