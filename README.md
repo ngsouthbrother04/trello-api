@@ -198,8 +198,8 @@ Create a `.env` file in the root directory:
 ```env
 MONGODB_URI=
 DATABASE_NAME=
-APP_HOST=localhost
-APP_PORT=8017
+LOCAL_DEV_APP_HOST=localhost
+LOCAL_DEV_APP_PORT=8017
 BUILD_MODE=dev
 ```
 
@@ -207,8 +207,8 @@ BUILD_MODE=dev
 |----------|-------------|---------|
 | `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017` |
 | `DATABASE_NAME` | Database name | `trello-db` |
-| `APP_HOST` | Server host | `localhost` |
-| `APP_PORT` | Server port | `8017` |
+| `LOCAL_DEV_APP_HOST` | Server host | `localhost` |
+| `LOCAL_DEV_APP_PORT` | Server port | `8017` |
 | `BUILD_MODE` | Environment mode | `dev` / `production` |
 
 ### Running the Application
