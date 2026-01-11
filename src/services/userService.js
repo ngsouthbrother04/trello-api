@@ -3,6 +3,8 @@ import ApiError from '~/utils/ApiError'
 import { StatusCodes } from 'http-status-codes'
 import { userModel } from '~/models/userModel'
 import { pickUserData } from '~/utils/formatter'
+import { WEBSITE_DOMAIN } from '~/utils/constants'
+import { BrevoProvider } from '~/providers/BrevoProvider'
 import bcrypt from 'bcryptjs'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -28,6 +30,16 @@ const createNew = async (reqBody) => {
     const newUserCreated = await userModel.findOneById(createdUser.insertedId)
 
     //TODO: Xác thực email
+    const verificationLink = `${WEBSITE_DOMAIN}/account/verification?email=${newUserCreated.email}&token=${newUserCreated.verifyToken}`
+    const customSubject = 'Trello MERN Stack ADVANCED: Verify your email address'
+    const htmlContent = `
+      <h3>Here is your email verification link:</h3>
+      <h3>${verificationLink}</h3>
+      <h3>Sincerely, <br> - Trello MERN Stack ADVANCED - </h3>
+    `
+
+    //Gọi tới provider gửi email
+    await BrevoProvider.sendEmail(newUserCreated.email, customSubject, htmlContent)
 
     //Trả kết quả về controller
     return pickUserData(newUserCreated)
