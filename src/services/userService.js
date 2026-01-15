@@ -31,7 +31,7 @@ const createNew = async (reqBody) => {
     const createdUser = await userModel.createNew(newUser)
     const newUserCreated = await userModel.findOneById(createdUser.insertedId)
 
-    //TODO: Xác thực email
+    //Xác thực email
     const verificationLink = `${WEBSITE_DOMAIN}/account/verification?email=${newUserCreated.email}&token=${newUserCreated.verifyToken}`
     const customSubject = 'Trello MERN Stack ADVANCED: Verify your email address'
     const htmlContent = `
@@ -124,8 +124,29 @@ const login = async (reqBody) => {
   }
 }
 
+const refreshToken = async (clientRefreshToken) => {
+  try {
+    //Verify refresh token
+    const refreshTokenDecoded = await JwtProvider.verifyToken(clientRefreshToken, env.REFRESH_TOKEN_SECRET_SIGNATURE)
+
+    //Lấy ra thông tin user từ refreshToken cũ, tránh query lại DB
+    const userInfo = {
+      _id: refreshTokenDecoded._id,
+      email: refreshTokenDecoded.email
+    }
+
+    //Tạo ra accessToken mới
+    const accessToken = await JwtProvider.generateToken(userInfo, env.ACCESS_TOKEN_SECRET_SIGNATURE, env.ACCESS_TOKEN_LIFE)
+
+    return { accessToken }
+  } catch (error) {
+    throw error
+  }
+}
+
 export const userService = {
   createNew,
   verifyAccount,
-  login
+  login,
+  refreshToken
 }
