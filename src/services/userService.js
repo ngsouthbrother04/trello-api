@@ -1,3 +1,4 @@
+/* eslint-disable no-lonely-if */
 /* eslint-disable no-useless-catch */
 import ApiError from '~/utils/ApiError'
 import { StatusCodes } from 'http-status-codes'
@@ -144,9 +145,44 @@ const refreshToken = async (clientRefreshToken) => {
   }
 }
 
+const update = async (userId, reqBody) => {
+  try {
+    const user = await userModel.findOneById(userId)
+
+    if (!user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
+    }
+
+    if (!user.isActive) {
+      throw new ApiError(StatusCodes.NOT_ACCEPTABLE, 'Cannot update an unverified account, please verify your email first')
+    }
+
+    let updatedUser = {}
+
+    if (reqBody.current_password && reqBody.new_password) {
+      //Kiểm tra current_password có đúng không
+      if (!bcrypt.compareSync(reqBody.current_password, user.password)) {
+        throw new ApiError(StatusCodes.NOT_ACCEPTABLE, 'Current password is incorrect')
+      }
+
+      updatedUser = await userModel.update(user._id, {
+        ...updatedUser,
+        password: bcrypt.hashSync(reqBody.new_password, 8)
+      })
+    } else {
+      updatedUser = await userModel.update(user._id, reqBody)
+    }
+
+    return pickUserData(updatedUser)
+  } catch (error) {
+    throw error
+  }
+}
+
 export const userService = {
   createNew,
   verifyAccount,
   login,
-  refreshToken
+  refreshToken,
+  update
 }
