@@ -1,5 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 import { userService } from '~/services/userService'
+import ms from 'ms'
 
 const createNew = async (req, res, next) => {
   try {
@@ -11,6 +12,46 @@ const createNew = async (req, res, next) => {
   }
 }
 
+const verifyAccount = async (req, res, next) => {
+  try {
+    const result = await userService.verifyAccount(req.body)
+
+    res.status(StatusCodes.OK).json(result)
+  } catch (error) {
+    next(error)
+  }
+}
+
+const login = async (req, res, next) => {
+  try {
+    const result = await userService.login(req.body)
+
+    /**
+     * Xử lý trả về http only cookie cho trình duyệt
+     * maxAge tính bằng ms, thời gian sống của cookie != thời gian sống của token (tối đa 14 ngày)
+     */
+    res.cookie('accessToken', result.accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge: ms('14 days')
+    })
+
+    res.cookie('refreshToken', result.refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge: ms('14 days')
+    })
+
+    res.status(StatusCodes.OK).json(result)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const userController = {
-  createNew
+  createNew,
+  verifyAccount,
+  login
 }

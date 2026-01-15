@@ -7,6 +7,8 @@ import { WEBSITE_DOMAIN } from '~/utils/constants'
 import { BrevoProvider } from '~/providers/BrevoProvider'
 import bcrypt from 'bcryptjs'
 import { v4 as uuidv4 } from 'uuid'
+import { JwtProvider } from '~/providers/JwtProvider'
+import { env } from '~/config/environment'
 
 const createNew = async (reqBody) => {
   try {
@@ -48,6 +50,82 @@ const createNew = async (reqBody) => {
   }
 }
 
+const verifyAccount = async (reqBody) => {
+  try {
+    const existedUser = await userModel.findOneByEmail(reqBody.email)
+
+    if (!existedUser) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
+    }
+
+    if (existedUser.isActive) {
+      throw new ApiError(StatusCodes.NOT_ACCEPTABLE, 'Account is already verified')
+    }
+
+    if (existedUser.verifyToken !== reqBody.token) {
+      throw new ApiError(StatusCodes.NOT_ACCEPTABLE, 'Invalid verification token')
+    }
+
+    //Cập nhật trạng thái tài khoản
+    const updateData = {
+      isActive: true,
+      verifyToken: null
+    }
+
+    const updatedUser = await userModel.update(existedUser._id, updateData)
+
+    return pickUserData(updatedUser)
+  } catch (error) {
+    throw error
+  }
+}
+
+const login = async (reqBody) => {
+  try {
+    const existedUser = await userModel.findOneByEmail(reqBody.email)
+
+    if (!existedUser) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
+    }
+
+    if (!existedUser.isActive) {
+      throw new ApiError(StatusCodes.NOT_ACCEPTABLE, 'Cannot login to an unverified account, please verify your email first')
+    }
+
+    if (!bcrypt.compareSync(reqBody.password, existedUser.password)) {
+      throw new ApiError(StatusCodes.NOT_ACCEPTABLE, 'Email or password is incorrect')
+    }
+
+    /*
+      Thông tin đính kèm trong token: userId, email
+      Nếu mọi thứ ok, tạo token để trả về cho client
+    */
+    const userInfo = { _id: existedUser._id, email: existedUser.email }
+
+    //Tạo ra accessToken và refreshToken trả về cho client
+    const accessToken = await JwtProvider.generateToken(userInfo,
+      env.ACCESS_TOKEN_SECRET_SIGNATURE,
+      // 5,
+      env.ACCESS_TOKEN_LIFE)
+
+    const refreshToken = await JwtProvider.generateToken(userInfo,
+      env.REFRESH_TOKEN_SECRET_SIGNATURE,
+      env.REFRESH_TOKEN_LIFE)
+
+    //Trả về thông tin user kèm theo 2 token vừa tạo
+    return {
+      accessToken,
+      refreshToken,
+      ...pickUserData(existedUser)
+    }
+
+  } catch (error) {
+    throw error
+  }
+}
+
 export const userService = {
-  createNew
+  createNew,
+  verifyAccount,
+  login
 }
