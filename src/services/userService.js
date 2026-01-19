@@ -9,6 +9,7 @@ import { BrevoProvider } from '~/providers/BrevoProvider'
 import bcrypt from 'bcryptjs'
 import { v4 as uuidv4 } from 'uuid'
 import { JwtProvider } from '~/providers/JwtProvider'
+import { CloudinaryProvider } from '~/providers/CloudinaryProvider'
 import { env } from '~/config/environment'
 
 const createNew = async (reqBody) => {
@@ -145,7 +146,7 @@ const refreshToken = async (clientRefreshToken) => {
   }
 }
 
-const update = async (userId, reqBody) => {
+const update = async (userId, reqBody, avatarFile) => {
   try {
     const user = await userModel.findOneById(userId)
 
@@ -168,6 +169,16 @@ const update = async (userId, reqBody) => {
       updatedUser = await userModel.update(user._id, {
         ...updatedUser,
         password: bcrypt.hashSync(reqBody.new_password, 8)
+      })
+    } else if (avatarFile) {
+      //Cập nhật avatar bằng cloudinary
+      // Với folder name là 'users', nếu chưa có thì cloudinary sẽ tự tạo, nếu có rồi thì sẽ dùng lại
+      const uploadResult = await CloudinaryProvider.streamUpload(avatarFile.buffer, 'trello/users', user._id.toString())
+
+      //Luu url của ảnh vào database
+      updatedUser = await userModel.update(user._id, {
+        ...updatedUser,
+        avatar: uploadResult.secure_url
       })
     } else {
       updatedUser = await userModel.update(user._id, reqBody)

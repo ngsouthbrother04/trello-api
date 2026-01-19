@@ -9,6 +9,15 @@ import { errorHandlingMiddleware } from '~/middlewares/errorHandlingMiddleware'
 import { corsOptions } from './config/cors'
 import cookieParser from 'cookie-parser'
 
+/** Các thuộc tính của req trong Express
+ * Body: req.body
+ * Params: req.params
+ * Query: req.query
+ * Headers: req.headers
+ * Cookies: req.cookies
+ * File: req.file | req.files (đối với upload file)
+ */
+
 const START_SERVER = () => {
   const app = express()
 
