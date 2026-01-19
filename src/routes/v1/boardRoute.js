@@ -6,7 +6,7 @@ import { authMiddleware } from '~/middlewares/authMiddleware'
 const Router = express.Router()
 
 Router.route('/')
-  .get(authMiddleware.isAuthorized, boardController.getListBoards)
+  .get(authMiddleware.isAuthorized, boardController.getBoards)
   .post(authMiddleware.isAuthorized, boardValidation.createBoard, boardController.createBoard)
 
 //API để di chuyển card giữa các column trong cùng một board

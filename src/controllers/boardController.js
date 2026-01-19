@@ -12,11 +12,13 @@ const createBoard = async (req, res, next) => {
   }
 }
 
-const getListBoards = async (req, res, next) => {
+const getBoards = async (req, res, next) => {
   try {
-    const listBoards = await boardService.getListBoards()
+    const userId = req.jwtDecoded._id
+    const { page, itemsPerPage } = req.query
+    const boards = await boardService.getBoards(userId, page, itemsPerPage)
 
-    res.status(StatusCodes.OK).json(listBoards)
+    res.status(StatusCodes.OK).json(boards)
   } catch (error) {
     next(error)
   }
@@ -55,7 +57,7 @@ const movingCardBetweenColumns = async (req, res, next) => {
 export const boardController = {
   createBoard,
   getDetails,
-  getListBoards,
+  getBoards,
   updateBoard,
   movingCardBetweenColumns
 }

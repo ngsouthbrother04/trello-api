@@ -5,6 +5,7 @@ import { ObjectId } from 'mongodb'
 import { BOARD_TYPE } from '~/utils/constants'
 import { columnModel } from './columnModel'
 import { cardModel } from './cardModel'
+import { pagingSkipValue } from '~/utils/algorithm'
 
 const BOARD_COLLECTION_NAME = 'boards'
 const BOARD_COLLECTION_SCHEMA = Joi.object({
@@ -15,6 +16,16 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
 
   // Lưu ý các item trong mảng columnOrderIds là ObjectId nên cần thêm pattern cho chuẩn
   columnOrderIds: Joi.array().items(
+    Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)
+  ).default([]),
+
+  // Thành viên của board, có thể là nhiều người
+  memberIds: Joi.array().items(
+    Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)
+  ).default([]),
+
+  // Chủ sở hữu board, có thể là nhiều người
+  ownerIds: Joi.array().items(
     Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)
   ).default([]),
 
@@ -37,9 +48,49 @@ const createBoard = async (data) => {
   }
 }
 
-const getListBoards = async () => {
+const getBoards = async (userId, page, itemsPerPage) => {
   try {
-    return await GET_DB().collection(BOARD_COLLECTION_NAME).find({ _destroy: false }).toArray()
+    const queryConditions = [
+      //Điều kiện 1: Board không bị xóa
+      { _destroy: false },
+
+      //Điều kiện 2: userId có trong mảng memberIds hoặc ownerIds của board
+      {
+        $or: [
+          { ownerIds: { $all: [new ObjectId(userId)] } },
+          { memberIds: { $all: [new ObjectId(userId)] } }
+        ]
+      }
+    ]
+
+    const query = await GET_DB().collection(BOARD_COLLECTION_NAME).aggregate([
+      { $match: { $and: queryConditions } },
+      { $sort: { title: 1 } }, //Sắp xếp theo tên board A-Z
+
+      //Xử lý nhiều luồng trong 1 query
+      {
+        $facet: {
+          //Luồng 1: Query boards
+          'queryBoards': [
+            { $skip: pagingSkipValue(page, itemsPerPage) }, //Bỏ qua số board đã lấy ở các page trước
+            { $limit: itemsPerPage } //Giới hạn số board trả về itemsPerPage
+          ],
+
+          //Luồng 2: Query total count để trả về số lượng board trong DB và trả về giá trị cho biến totalBoards
+          'queryTotalBoards': [{ $count: 'totalBoards' }]
+        }
+      }
+    ],
+    //Xử lý trường hợp sort A-Z bị sai logic ()
+    { collation: { locale: 'en' } }
+    ).toArray()
+
+    const result = query[0]
+
+    return {
+      boards: result.queryBoards || [],
+      totalBoards: result.queryTotalBoards[0]?.totalBoards || 0
+    }
   } catch (error) {
     throw new Error(error)
   }
@@ -145,7 +196,7 @@ export const boardModel = {
   createBoard,
   getDetails,
   findOneById,
-  getListBoards,
+  getBoards,
   pushColIdToBoard,
   updateBoard,
   pullColIdFromBoard

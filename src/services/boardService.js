@@ -6,6 +6,7 @@ import { ObjectId } from 'mongodb'
 import { cloneDeep } from 'lodash'
 import { columnModel } from '~/models/columnModel'
 import { cardModel } from '~/models/cardModel'
+import { DEFAULT_PAGE, DEFAULT_ITEMS_PER_PAGE } from '~/utils/constants'
 
 const createBoard = async (req) => {
   try {
@@ -48,9 +49,12 @@ const getDetails = async (id) => {
   }
 }
 
-const getListBoards = async () => {
+const getBoards = async (userId, page, itemsPerPage) => {
   try {
-    return await boardModel.getListBoards()
+    if (!page) page = DEFAULT_PAGE
+    if (!itemsPerPage) itemsPerPage = DEFAULT_ITEMS_PER_PAGE
+
+    return await boardModel.getBoards(userId, parseInt(page, 10), parseInt(itemsPerPage, 10))
   } catch (error) {
     throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, 'Fail to get list boards')
   }
@@ -101,7 +105,7 @@ const movingCardBetweenColumns = async (reqBody) => {
 export const boardService = {
   createBoard,
   getDetails,
-  getListBoards,
+  getBoards,
   updateBoard,
   movingCardBetweenColumns
 }
