@@ -8,14 +8,14 @@ import { columnModel } from '~/models/columnModel'
 import { cardModel } from '~/models/cardModel'
 import { DEFAULT_PAGE, DEFAULT_ITEMS_PER_PAGE } from '~/utils/constants'
 
-const createBoard = async (req) => {
+const createBoard = async (userId, reqBody) => {
   try {
     const board = {
-      ...req,
-      slug: slugify(req.title)
+      ...reqBody,
+      slug: slugify(reqBody.title)
     }
 
-    const createdBoard = await boardModel.createBoard(board)
+    const createdBoard = await boardModel.createBoard(userId, board)
 
     return await boardModel.findOneById(createdBoard.insertedId)
   } catch (error) {
@@ -23,13 +23,13 @@ const createBoard = async (req) => {
   }
 }
 
-const getDetails = async (id) => {
+const getDetails = async (userId, boardId) => {
   try {
-    if (!ObjectId.isValid(id)) {
+    if (!ObjectId.isValid(boardId)) {
       throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid board id')
     }
 
-    const board = await boardModel.getDetails(id)
+    const board = await boardModel.getDetails(userId, boardId)
     if (!board) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Cannot find board with given id')
     }
