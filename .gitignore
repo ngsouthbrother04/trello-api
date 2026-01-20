@@ -26,3 +26,7 @@ yarn-error.log*
 .vscode/
 .idea/
 .github/
+
+# Postman
+*.postman_collection.json
+postman/
