@@ -1,0 +1,582 @@
+{
+  "info": {
+    "_postman_id": "a2ca6e9d-d76c-461f-bcc2-17dec3f6fb92",
+    "name": "trello-api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "38534028"
+  },
+  "item": [
+    {
+      "name": "Board",
+      "item": [
+        {
+          "name": "Get list boards",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8017/v1/boards?page=1&itemsPerPage=2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "boards"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "itemsPerPage",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create board",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Công việc 17\",\n    \"description\": \"Mô tả 17\",\n    \"type\": \"public\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/boards",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "boards"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get board details",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Công việc 6\",\n    \"description\": \"Mô tả 6\",\n    \"type\": \"a\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/boards/6933f4b62aa843da8abcd9ed",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "boards",
+                "6933f4b62aa843da8abcd9ed"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update board",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "/*\n    Dùng để update vị trí thứ tự của các column trong board hoặc thông tin như title, ...\n*/\n{\n  \"_id\": \"6933f4b62aa843da8abcd9ed\",\n  \"title\": \"Công việc 1\",\n  \"description\": \"Mô tả 1\",\n  \"type\": \"public\",\n  \"columnOrderIds\": [\"6933f4cd2aa843da8abcd9ee\", \"6933f841efded718f23f279d\"]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/boards/6933f4b62aa843da8abcd9ed",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "boards",
+                "6933f4b62aa843da8abcd9ed"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Moving card",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currCardId\": \"6933f83aefded718f23f279c\",\n  \"prevColumnId\": \"6933f4cd2aa843da8abcd9ee\",\n  \"nextColumnId\": \"6937b474ea8a88cc4ae47d5d\",\n  \"prevCardOrderIds\": [\n    \"6933f6de9b4c07e5843ddd77\",\n    \"6933f6ff9b4c07e5843ddd78\"\n  ],\n  \"nextCardOrderIds\": [\n    \"6933f83aefded718f23f279c\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/boards/supports/moving-card",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "boards",
+                "supports",
+                "moving-card"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Column",
+      "item": [
+        {
+          "name": "Create Columns",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"boardId\": \"6933f4b62aa843da8abcd9ed\",\n    \"title\": \"Column 1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/columns",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "columns"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Column",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "/*\n    Dùng để update vị trí thứ tự của các card trong column hoặc thông tin như title, .... Nếu muốn update card qua column khác thì phải cho phép update columnId\n*/\n{\n    \"title\": \"Column 1\",\n    \"cardOrderIds\": [\n        \"6933f6de9b4c07e5843ddd77\",\n        \"6933f83aefded718f23f279c\",\n        \"6933f6ff9b4c07e5843ddd78\"\n    ],\n    \"_destroy\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/columns/6933f4cd2aa843da8abcd9ee",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "columns",
+                "6933f4cd2aa843da8abcd9ee"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Column By ID",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/columns/693aaaa8c0d97b0492413352",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "columns",
+                "693aaaa8c0d97b0492413352"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Card",
+      "item": [
+        {
+          "name": "Create Card",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"boardId\": \"6933f4b62aa843da8abcd9ed\",\n    \"columnId\": \"693aab8bc0d97b0492413354\",\n    \"title\": \"Card 3\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/cards",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "cards"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update card",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "cardCover",
+                  "type": "file",
+                  "uuid": "57038e52-9ef8-4555-8fd1-58d3be63005c",
+                  "src": "/Users/na/Downloads/blue-abstract-background-digital-art-4k-wallpaper-uhdpaper.com-114@5@h.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/cards/693aab64c0d97b0492413353",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "cards",
+                "693aab64c0d97b0492413353"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Comment to Card",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"commentToAdd\": {\n        \"content\": \"Đây là comment đầu tiên!\",\n        \"userAvatar\": \"https://example.com/avatar.png\",\n        \"userDisplayName\": \"Test User\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/cards/693aab64c0d97b0492413353",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "cards",
+                "693aab64c0d97b0492413353"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Comment (Minimal)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"commentToAdd\": {\n        \"content\": \"Comment chỉ có nội dung\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/cards/693aab64c0d97b0492413353",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "cards",
+                "693aab64c0d97b0492413353"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Comment (Special Characters)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"commentToAdd\": {\n        \"content\": \"Comment với ký tự đặc biệt: 🎉 ✅ ❌ Tiếng Việt 日本語\",\n        \"userDisplayName\": \"Unicode Tester 🚀\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/cards/693aab64c0d97b0492413353",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "cards",
+                "693aab64c0d97b0492413353"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"nguyennamanh04vl@gmail.com\",\n    \"password\": \"az3a3212\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/users/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "users",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"nguyennamanh04vl@gmail.com\",\n    \"password\": \"nnama123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/users/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "users",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Account",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"nguyennamanh04vl@gmail.com\",\n    \"token\": \"cb497c8b-082b-4081-9ad1-11c1d69803dc\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/users/verify",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "users",
+                "verify"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update user's info",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "avatar",
+                  "type": "file",
+                  "uuid": "a2975347-a83a-46bf-8ae3-9040be806da0",
+                  "src": "/Users/na/Downloads/light.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/users/update",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "users",
+                "update"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8017/v1/users/refresh_token",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "users",
+                "refresh_token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8017/v1/users/logout",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "users",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

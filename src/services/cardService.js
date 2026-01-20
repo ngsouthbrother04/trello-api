@@ -25,20 +25,34 @@ const createCard = async (req) => {
   }
 }
 
-const updateCard = async (cardId, reqBody, cardCoverFile) => {
+const updateCard = async (cardId, reqBody, cardCoverFile, userInfo) => {
   try {
     const updateData = {
       ...reqBody,
       updatedAt: Date.now()
     }
 
+    let updatedCard = {}
+
     // Cập nhật ảnh nếu có file được gửi lên
     if (cardCoverFile) {
       const uploadResult = await CloudinaryProvider.streamUpload(cardCoverFile.buffer, 'trello/cardCovers', cardId)
       updateData.cover = uploadResult.secure_url
+
+      updatedCard = await cardModel.updateCard(cardId, updateData)
+    } else if (updateData.commentToAdd) {
+      //Tạo dữ liệu comment thêm vào DB
+      const commentData = {
+        ...updateData.commentToAdd,
+        commentedAt: Date.now(),
+        userId: userInfo._id,
+        userEmail: userInfo.email
+      }
+
+      updatedCard = await cardModel.unshiftNewComment(cardId, commentData)
     }
 
-    return await cardModel.updateCard(cardId, updateData)
+    return updatedCard
   } catch (error) {
     throw error
   }
