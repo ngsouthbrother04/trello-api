@@ -20,6 +20,25 @@ const createCard = async (req, res, next) => {
   }
 }
 
+const updateCard = async (req, res, next) => {
+  const cardUpdateConditions = Joi.object({
+    title: Joi.string().min(3).max(50).trim().strict(),
+    description: Joi.string().optional()
+  })
+
+  try {
+    await cardUpdateConditions.validateAsync(req.body, {
+      abortEarly: false,
+      allowUnknown: true
+    })
+
+    next()
+  } catch (error) {
+    next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, error.message))
+  }
+}
+
 export const cardValidation = {
-  createCard
+  createCard,
+  updateCard
 }

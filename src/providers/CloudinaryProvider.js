@@ -11,16 +11,15 @@ cloudinaryV2.config({
 })
 
 //Function thực hiện upload file lên cloudinary
-const streamUpload = (fileBuffer, folderName, userId) => {
+const streamUpload = (fileBuffer, folderName, id) => {
   return new Promise((resolve, reject) => {
     //Tạo luồng upload stream lên cloudinary
     const stream = cloudinaryV2.uploader.upload_stream({
       folder: folderName,
-      public_id: `user_${userId}`,
+      public_id: `id_${id}`,
       overwrite: true,
       transformation: [
-        { quality: 'auto', fetch_format: 'auto' },
-        { width: 200, height: 200, crop: 'fill', gravity: 'face' }
+        { quality: 'auto', fetch_format: 'auto' }
       ]
     },
     (err, result) => {
