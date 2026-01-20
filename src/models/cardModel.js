@@ -88,34 +88,11 @@ const deleteManyByColumnId = async (columnId) => {
   }
 }
 
-/** Đẩy một comment mới vào đầu mảng comments của card
- * Trong mongoDB, thao tác này dùng $push với $each và $position: 0
- */
-const unshiftNewComment = async (cardId, commentData) => {
-  try {
-    return await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
-      { _id: new ObjectId(cardId) },
-      {
-        $push: {
-          comments: {
-            $each: [commentData],
-            $position: 0
-          }
-        }
-      },
-      { returnDocument: 'after' }
-    )
-  } catch (error) {
-    throw new Error(error)
-  }
-}
-
 export const cardModel = {
   CARD_COLLECTION_NAME,
   CARD_COLLECTION_SCHEMA,
   findOneById,
   createCard,
   updateCard,
-  deleteManyByColumnId,
-  unshiftNewComment
+  deleteManyByColumnId
 }
