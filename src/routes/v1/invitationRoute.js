@@ -16,4 +16,8 @@ Router.route('/board')
     invitationController.createNewBoardInvitation
   )
 
+//Cập nhật lời mời bảng (chấp nhận hoặc từ chối)
+Router.route('/board/:invitationId')
+  .put(authMiddleware.isAuthorized, invitationController.updateBoardInvitation)
+
 export const invitationRoute = Router

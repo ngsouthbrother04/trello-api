@@ -30,7 +30,7 @@ const validateSchema = async (data) => {
 
 const findOneById = async (invitationId) => {
   try {
-    return await GET_DB().collection(INVITATION_COLLECTION_NAME).findOne({ _id: new Object(invitationId), _destroy: false })
+    return await GET_DB().collection(INVITATION_COLLECTION_NAME).findOne({ _id: new ObjectId(invitationId), _destroy: false })
   } catch (error) {
     throw Error(error)
   }
@@ -67,7 +67,7 @@ const update = async (invitationId, data) => {
       }
     })
 
-    if (invitationId.boardInvitation) {
+    if (data.boardInvitation) {
       data.boardInvitation = {
         ...data.boardInvitation,
         boardId: new ObjectId(data.boardInvitation.boardId)

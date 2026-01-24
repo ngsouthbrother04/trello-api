@@ -86,8 +86,8 @@ const getBoards = async (userId, page, itemsPerPage) => {
         }
       }
     ],
-    //Xử lý trường hợp sort A-Z bị sai logic ()
-    { collation: { locale: 'en' } }
+      //Xử lý trường hợp sort A-Z bị sai logic ()
+      { collation: { locale: 'en' } }
     ).toArray()
 
     const result = query[0]
@@ -221,6 +221,20 @@ const updateBoard = async (id, data) => {
   }
 }
 
+const pushMemberId = async (boardId, userId) => {
+  try {
+    const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
+      { _id: new ObjectId(boardId) },
+      { $push: { memberIds: new ObjectId(userId) } },
+      { returnDocument: 'after' }
+    )
+
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export const boardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_COLLECTION_SCHEMA,
@@ -230,5 +244,6 @@ export const boardModel = {
   getBoards,
   pushColIdToBoard,
   updateBoard,
-  pullColIdFromBoard
+  pullColIdFromBoard,
+  pushMemberId
 }
