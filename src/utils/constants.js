@@ -21,6 +21,11 @@ export const BOARD_INVITATION_STATUS = {
   REJECTED: 'REJECTED'
 }
 
+export const CARD_MEMBER_ACTIONS = {
+  ADD: 'ADD',
+  REMOVE: 'REMOVE'
+}
+
 export const WEBSITE_DOMAIN = env.BUILD_MODE === 'production' ? env.WEBSITE_DOMAIN_PRODUCTION : env.WEBSITE_DOMAIN_DEVELOPMENT
 
 export const DEFAULT_PAGE = 1
