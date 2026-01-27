@@ -53,7 +53,7 @@ const createBoard = async (userId, data) => {
   }
 }
 
-const getBoards = async (userId, page, itemsPerPage) => {
+const getBoards = async (userId, page, itemsPerPage, queryFilters) => {
   try {
     const queryConditions = [
       //Điều kiện 1: Board không bị xóa
@@ -67,6 +67,20 @@ const getBoards = async (userId, page, itemsPerPage) => {
         ]
       }
     ]
+
+    //Query filter cho từng trường hợp
+    if (queryFilters) {
+      Object.keys(queryFilters).forEach(field => {
+        //queryFilters[field] là giá trị truyền vào để lọc, ví dụ q[title]=abc thì queryFilters={title: 'abc'}
+
+        //Không phân biệt hoa thường
+        queryConditions.push({
+          [field]: {
+            $regex: new RegExp(queryFilters[field], 'i')
+          }
+        })
+      })
+    }
 
     const query = await GET_DB().collection(BOARD_COLLECTION_NAME).aggregate([
       { $match: { $and: queryConditions } },
@@ -86,8 +100,8 @@ const getBoards = async (userId, page, itemsPerPage) => {
         }
       }
     ],
-      //Xử lý trường hợp sort A-Z bị sai logic ()
-      { collation: { locale: 'en' } }
+    //Xử lý trường hợp sort A-Z bị sai logic ()
+    { collation: { locale: 'en' } }
     ).toArray()
 
     const result = query[0]

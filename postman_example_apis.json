@@ -1,0 +1,766 @@
+{
+  "info": {
+    "_postman_id": "722caaac-41d9-4065-8fd6-4ebfcc34f09a",
+    "name": "trello-api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "38534028"
+  },
+  "variable": [
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Board",
+      "item": [
+        {
+          "name": "Get list boards",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8017/v1/boards?page=1&itemsPerPage=12&q[title]=board&q[description]=test",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "boards"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "itemsPerPage",
+                  "value": "12"
+                },
+                {
+                  "key": "q[title]",
+                  "value": "board"
+                },
+                {
+                  "key": "q[description]",
+                  "value": "test"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create board",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Công việc 17\",\n    \"description\": \"Mô tả 17\",\n    \"type\": \"public\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/boards",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "boards"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get board details",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Công việc 6\",\n    \"description\": \"Mô tả 6\",\n    \"type\": \"a\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/boards/6933f4b62aa843da8abcd9ed",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "boards",
+                "6933f4b62aa843da8abcd9ed"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update board",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "/*\n    Dùng để update vị trí thứ tự của các column trong board hoặc thông tin như title, ...\n*/\n{\n  \"_id\": \"6933f4b62aa843da8abcd9ed\",\n  \"title\": \"Công việc 1\",\n  \"description\": \"Mô tả 1\",\n  \"type\": \"public\",\n  \"columnOrderIds\": [\"6933f4cd2aa843da8abcd9ee\", \"6933f841efded718f23f279d\"]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/boards/6933f4b62aa843da8abcd9ed",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "boards",
+                "6933f4b62aa843da8abcd9ed"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Moving card",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currCardId\": \"6933f83aefded718f23f279c\",\n  \"prevColumnId\": \"6933f4cd2aa843da8abcd9ee\",\n  \"nextColumnId\": \"6937b474ea8a88cc4ae47d5d\",\n  \"prevCardOrderIds\": [\n    \"6933f6de9b4c07e5843ddd77\",\n    \"6933f6ff9b4c07e5843ddd78\"\n  ],\n  \"nextCardOrderIds\": [\n    \"6933f83aefded718f23f279c\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/boards/supports/moving-card",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "boards",
+                "supports",
+                "moving-card"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Column",
+      "item": [
+        {
+          "name": "Create Columns",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"boardId\": \"6933f4b62aa843da8abcd9ed\",\n    \"title\": \"Column 1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/columns",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "columns"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Column",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "/*\n    Dùng để update vị trí thứ tự của các card trong column hoặc thông tin như title, .... Nếu muốn update card qua column khác thì phải cho phép update columnId\n*/\n{\n    \"title\": \"Column 1\",\n    \"cardOrderIds\": [\n        \"6933f6de9b4c07e5843ddd77\",\n        \"6933f83aefded718f23f279c\",\n        \"6933f6ff9b4c07e5843ddd78\"\n    ],\n    \"_destroy\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/columns/6933f4cd2aa843da8abcd9ee",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "columns",
+                "6933f4cd2aa843da8abcd9ee"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Column By ID",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/columns/693aaaa8c0d97b0492413352",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "columns",
+                "693aaaa8c0d97b0492413352"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Card",
+      "item": [
+        {
+          "name": "Create Card",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"boardId\": \"6933f4b62aa843da8abcd9ed\",\n    \"columnId\": \"693aab8bc0d97b0492413354\",\n    \"title\": \"Card 3\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/cards",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "cards"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update card",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/cards/693aab64c0d97b0492413353",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "cards",
+                "693aab64c0d97b0492413353"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Comment to Card",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"commentToAdd\": {\n        \"content\": \"Đây là comment 4\",\n        \"userAvatar\": \"https://res.cloudinary.com/ddtnzyzvf/image/upload/v1768908475/trello/users/id_69646faaf0b1c94d6dbbf7a4.jpg\",\n        \"userDisplayName\": \"NA 4\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/cards/693aab64c0d97b0492413353",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "cards",
+                "693aab64c0d97b0492413353"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"example@gmail.com\",\n    \"password\": \"az3a3212\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/users/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "users",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"example@gmail.com\",\n    \"password\": \"nnama123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/users/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "users",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Account",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"example@gmail.com\",\n    \"token\": \"cb497c8b-082b-4081-9ad1-11c1d69803dc\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/users/verify",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "users",
+                "verify"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update user's info",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "avatar",
+                  "type": "file",
+                  "uuid": "a2975347-a83a-46bf-8ae3-9040be806da0",
+                  "src": "../../Downloads/light.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/users/update",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "users",
+                "update"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8017/v1/users/refresh_token",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "users",
+                "refresh_token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8017/v1/users/logout",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "users",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Invitation",
+      "item": [
+        {
+          "name": "Board Invitation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"inviteeEmail\": \"example@gmail.com\",\n    \"boardId\": \"6933f4b62aa843da8abcd9ed\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/invitations/board",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "invitations",
+                "board"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get invitations by user",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8017/v1/invitations/",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "invitations",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Invitation Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "accessToken={{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"REJECTED\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8017/v1/invitations/board/697223a8e363515039155c11",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8017",
+              "path": [
+                "v1",
+                "invitations",
+                "board",
+                "697223a8e363515039155c11"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
